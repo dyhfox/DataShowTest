@@ -26,7 +26,7 @@ def contactus(request):
 
 
 def getinfo(request):
-    FilePath = 'C:\\Users\\Administrator\\Documents\\Tencent Files\\707257663\\FileRecv\\stats'
+    FilePath = '/gamedata/gamedata/'
     FileName = os.listdir(FilePath)
     fullfile = []
     for txtfile in FileName:
