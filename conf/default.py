@@ -49,7 +49,7 @@ BK_PAAS_HOST = os.environ.get('BK_PAAS_HOST', BK_PAAS_HOST)
 # 应用访问路径
 SITE_URL = '/'
 # 运行模式， DEVELOP(开发模式)， TEST(测试模式)， PRODUCT(正式模式)
-RUN_MODE = 'DEVELOP'
+RUN_MODE = 'TEST'
 if ENVIRONMENT.endswith('production'):
     RUN_MODE = 'PRODUCT'
     DEBUG = False
