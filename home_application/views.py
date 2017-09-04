@@ -92,4 +92,4 @@ def getinfo(request):
                     n = n + 1
         date = date + 1
     print serIp
-    return render_json({'time':time,'ip':serIp, 'id':serID, 'login':numon, 'offline':numoff})
+    return render_json({'time':time,'ip':serIp, 'id':serID, 'login':numon, 'offline':numoff, 'filename':FileName})
