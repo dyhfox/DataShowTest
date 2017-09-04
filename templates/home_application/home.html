@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="refresh" content="3">
+        <meta http-equiv="refresh" content="30">
         <title></title>
         <!-- 若您需要使用Kendo UI Professional，请联系版权人获得合法的授权或许可。 -->
         <!-- Bootstrap css -->
@@ -105,17 +105,36 @@
                 $.post("${SITE_URL}getinfo/", {'chart': type}, function (res) {
                     var i = 0;
                     var ht = "";
+                    ht +="<ul id=\"myTab\" class=\"nav nav-tabs\">";
+                    ht +="<li class=\"dropdown\">";
+                    ht +="<a href=\"#\" id=\"myTabDrop1\" class=\"dropdown-toggle\" \n" +
+                         "data-toggle=\"dropdown\">日期<b class=\"caret\"></b>\n" +
+                         "</a>";
+                    ht +="<ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"myTabDrop1\">";
 
                     while (i < res.time.length) {
+
+                        ht += "<li><a href=\"#"+res.filename[i]+"\" tabindex=\"-1\" data-toggle=\"tab\">"+res.filename[i]+"</a></li>";
+
+
+                        i++;
+                    }
+                    ht +="</ul></li></ul>";
+                    ht +="<div id=\"myTabContent\" class=\"tab-content\">";
+                    i = 0;
+                    while (i < res.time.length) {
                         var j = 0;
+                        ht +="<div class=\"tab-pane fade in active\" id=\""+res.filename[i]+"\">";
                         while (j < res.id) {
-                            ht += "<div class=\"king-layout2-main mt15\" style=\"width:960px;\">";
+                            ht += "<div class=\"king-layout2-main mt15 tab-pane fade in active\" style=\"width:960px;\">";
                             ht += "<div style=\"height: 300px; position: relative;\" id=\"chart" + i + j + "\" class=\"king-chart-box chart-line  k-chart\" data-role=\"chart\"></div>";
                             ht += "</div>";
                             j++;
                         }
+                        ht +="</div>";
                         i++;
                     }
+                    ht +="</div>";
                     $("#chart").html(ht);
                     i = 0;
                     while (i < res.time.length) {
@@ -202,7 +221,11 @@
                 }, 'json');
             })
         </script>
-
+        <script>
+            $(function () {
+                $('#myTab li:eq(1) a').tab('show');
+            });
+        </script>
     </body>
 
 </html>
