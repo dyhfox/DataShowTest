@@ -26,8 +26,7 @@ def contactus(request):
 
 
 def getinfo(request):
-    #FilePath = 'C:\\Users\\Administrator\\Documents\\Tencent Files\\707257663\\FileRecv\\stats'
-    FilePath = '/gamedata/gamedata/'
+    FilePath = 'C:\\Users\\Administrator\\Documents\\Tencent Files\\707257663\\FileRecv\\stats'
     FileName = os.listdir(FilePath)
     fullfile = []
     for txtfile in FileName:
@@ -93,4 +92,4 @@ def getinfo(request):
                     n = n + 1
         date = date + 1
     print serIp
-    return render_json({'time':time,'ip':serIp, 'id':serID, 'login':numon, 'offline':numoff, 'filename':FileName})
+    return render_json({'time':time,'ip':serIp, 'id':serID, 'login':numon, 'offline':numoff})
