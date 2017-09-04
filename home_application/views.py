@@ -2,7 +2,6 @@
 
 from common.mymako import render_mako_context, render_json
 import re
-import paramiko
 import os
 def home(request):
     """
