@@ -2,6 +2,7 @@
 
 from common.mymako import render_mako_context, render_json
 import re
+import paramiko
 import os
 def home(request):
     """
@@ -25,47 +26,31 @@ def contactus(request):
 
 
 def getinfo(request):
-    #FilePath = 'C:\\Users\\Administrator\\Documents\\Tencent Files\\707257663\\FileRecv\\stats'
-    FilePath = '/gamedata/gamedata/'
+    FilePath = 'C:\\Users\\Administrator\\Documents\\Tencent Files\\707257663\\FileRecv\\stats'
     FileName = os.listdir(FilePath)
     fullfile = []
-    filedate = []
     for txtfile in FileName:
         fullfile.append(os.path.join(FilePath,txtfile))
-        filedate.append(txtfile[6:16])
 
     serIp = []
     time = []
     numon = []
     numoff = []
-    Anumon = []
-    Anumoff = []
-    dateon = []
-    dateoff = []
     date = 0
     for fullpath in fullfile:
         serIp.append([])
         time.append([])
         numon.append([])
         numoff.append([])
-        Anumon.append([])
-        Anumoff.append([])
         f = open(fullpath, "r")
         lines = f.readlines()
         n = 0
         max = 0
         for line in lines:
             fg1 = 0
-            sumnum = line.find(r'SUM')
-            if sumnum >= 0:
+            sum = line.find(r'SUM')
+            if sum >= 0:
                 fg1 = 1
-                head5 = line.find(r'login-')
-                tail5 = line.find(r' ', head5)
-                head6 = line.find(r'offline-')
-                #tail6 = line.find(r' ', head6)
-                Anumon[date].append(int(line[head5 + 6:tail5]))
-                Anumoff[date].append(int(line[head6 + 8:]))
-
             line = line.rstrip('\n')
             head = line.find(r'>>>')
             tail = line.find(r'=')
@@ -104,10 +89,7 @@ def getinfo(request):
                 if head4 != -1:
                     numoff[date][serID - 1].append(int(line[head4 + 8:]))
                     # print line[head4+8:]
-
                     n = n + 1
-        dateon.append(float(sum(Anumon[date])/len(Anumon[date])))
-        dateoff.append(float(sum(Anumoff[date])/len(Anumoff[date])))
         date = date + 1
-
-    return render_json({'time':time,'ip':serIp, 'id':serID, 'login':numon, 'offline':numoff, 'filename':filedate, 'Alogin':dateon, 'Aoffline':dateoff})
+    print serIp
+    return render_json({'time':time,'ip':serIp, 'id':serID, 'login':numon, 'offline':numoff})
