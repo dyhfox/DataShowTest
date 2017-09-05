@@ -6098,3 +6098,46 @@ button.king-btn.bk-block {
 /* 表单样式因字体大小改变导致的错乱修复 end */
 
 /*# sourceMappingURL=bk.css.map */
+/*
+ tab panel 不显示Echarts  图表问题   */
+
+/*
+ bootstrap hack: fix content width inside hidden tabs */
+
+.tab-content
+ > .tab-pane,
+
+.pill-content
+ > .pill-pane {
+
+    display:
+block;
+/*
+ undo display:none          */
+
+    height:
+0;
+/*
+ height:0 is also invisible */
+
+    overflow-y:
+hidden;
+/*
+ no-overflow                */
+
+}
+
+.tab-content
+ > .active,
+
+.pill-content
+ > .active {
+
+    height:
+auto;
+/*
+ let the content decide it  */
+
+}
+/*
+ bootstrap hack end */
