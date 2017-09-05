@@ -5,7 +5,6 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="refresh" content="30">
         <title></title>
         <!-- 若您需要使用Kendo UI Professional，请联系版权人获得合法的授权或许可。 -->
         <!-- Bootstrap css -->
@@ -20,9 +19,13 @@
         <link href="https://magicbox.bkclouds.cc/static_api/v3/bk/css/bk_pack.css" rel="stylesheet">
         <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
         <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+        <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.js"></script>
         <!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
         <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
         <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+        <script src ="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+        <script src ="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+        <script src ="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
         <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
         <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
         <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
@@ -43,43 +46,13 @@
                         <div class="nav-container">
                             <div class="navbar-header">
                                 <button class="pull-right visible-xs navbar-toggle collapsed navbar-toggle-sm" type="button" data-toggle="collapse" data-target="#king-header2-navbar-collapse"> <i class="fa fa-fw fa-ellipsis-v">                    </i> </button>
-                                <a class="navbar-brand" href="javascript:;" title="故障预警系统">
+                                <a class="navbar-brand" href="javascript:;" title="游戏人数统计">
                                     <img src="https://magicbox.bkclouds.cc/static_api/v3/bk/images/logo.png" alt="" class="logo" style="margin-top:-5px;"> </a>
                             </div>
                             <div class="navbar-collapse collapse" id="king-header2-navbar-collapse">
                                 <ul class="nav navbar-nav navbar-left hidden-sm">
-                                    <li class="open">
-                                        <a href="javascript:void(0);">
-                                            <span>项目信息</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <span>故障预警</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <span>关键词</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <span>数据查询</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <span>舆论健康度</span>
-                                        </a>
-                                    </li>
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">
-                                    <li>
-                                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-cog">                            </i>
-                                            <span class="ml10"> 管理配置 </span>
-                                        </a>
-                                    </li>
                                     <li>
                                         <a href="javascript:void(0)">
                                             <span> admin </span>
@@ -94,6 +67,9 @@
                     </div>
                 </nav>
             </div>
+            <div class="king-layout2-main mt15" style="width:960px;">
+                <div style="height: 300px; position: relative;" id="overall" class="king-chart-box chart-line  k-chart" data-role="chart"></div>
+            </div>
             <div id="chart">
 
             </div>
@@ -105,127 +81,148 @@
                 $.post("${SITE_URL}getinfo/", {'chart': type}, function (res) {
                     var i = 0;
                     var ht = "";
-                    ht +="<ul id=\"myTab\" class=\"nav nav-tabs\">";
-                    ht +="<li class=\"dropdown\">";
-                    ht +="<a href=\"#\" id=\"myTabDrop1\" class=\"dropdown-toggle\" \n" +
-                         "data-toggle=\"dropdown\">日期<b class=\"caret\"></b>\n" +
-                         "</a>";
-                    ht +="<ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"myTabDrop1\">";
-
+                    ht += "<ul id=\"myTab\" class=\"nav nav-tabs\">";
+                    ht += "<li class=\"dropdown\">";
+                    ht += "<a href=\"#\" id=\"myTabDrop1\" class=\"dropdown-toggle\" style=\"position: relative;\"\n" +
+                            "data-toggle=\"dropdown\">每日数据<b class=\"caret\"></b>\n" +
+                            "</a>";
+                    ht += "<ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"myTabDrop1\">";
                     while (i < res.time.length) {
 
-                        ht += "<li><a href=\"#"+res.filename[i]+"\" tabindex=\"-1\" data-toggle=\"tab\">"+res.filename[i]+"</a></li>";
-
-
+                        ht += "<li><a href=\"#" + res.filename[i] + "\" tabindex=\"-1\" data-toggle=\"tab\">" + res.filename[i] + "</a></li>";
                         i++;
                     }
-                    ht +="</ul></li></ul>";
-                    ht +="<div id=\"myTabContent\" class=\"tab-content\">";
+                    ht += "</ul></li></ul>";
+                    ht += "<div id=\"myTabContent\" class=\"tab-content\">";
                     i = 0;
                     while (i < res.time.length) {
                         var j = 0;
-                        ht +="<div class=\"tab-pane fade in active\" id=\""+res.filename[i]+"\">";
+                        ht += "<div class=\"tab-pane fade\" id=\"" + res.filename[i] + "\">";
                         while (j < res.id) {
-                            ht += "<div class=\"king-layout2-main mt15 tab-pane fade in active\" style=\"width:960px;\">";
+                            ht += "<div class=\"king-layout2-main mt15\" style=\"width:960px;\">";
                             ht += "<div style=\"height: 300px; position: relative;\" id=\"chart" + i + j + "\" class=\"king-chart-box chart-line  k-chart\" data-role=\"chart\"></div>";
                             ht += "</div>";
                             j++;
                         }
-                        ht +="</div>";
+                        ht += "</div>";
                         i++;
                     }
-                    ht +="</div>";
+                    ht += "</div>";
                     $("#chart").html(ht);
                     i = 0;
+                    var dd = 0;
+                    var Gtime = new Array;
                     while (i < res.time.length) {
                         j = 0;
                         while (j < res.id) {
-
-                            var myChart = echarts.init(document.getElementById('chart' + i + j));
-                            var num = j + 1;
-                            options = {
+                            var num = j+1;
+                            Gtime[dd] = res.time[i];
+                            dd++;
+                            $('#chart'+i+j).highcharts({
+                                chart: {
+                                    type: 'spline'
+                                },
                                 title: {
-                                    text: '游戏人数',
-                                    subtext: 'ID:'+num+':'+res.ip[i][j]
+                                    text: res.filename[i]+'游戏人数'
+                                },
+                                subtitle: {
+                                    text: '服务器ID：'+num+';服务器IP：'+res.ip[i][j]
+                                },
+                                xAxis: {
+                                    tickInterval: 100,
+                                    categories: res.time[i]
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: '人数'
+                                    },
+                                    labels: {
+                                        formatter: function () {
+                                            return this.value + '°';
+                                        }
+                                    }
                                 },
                                 tooltip: {
-                                    trigger: 'axis'
+                                    crosshairs: true,
+                                    shared: true
                                 },
-                                legend: {
-                                    data: ['在线人数', '离线人数']
-                                },
-                                toolbox: {
-                                    show: false,
-                                    feature: {
-                                        mark: {show: true},
-                                        dataView: {show: true, readOnly: false},
-                                        magicType: {show: true, type: ['line', 'bar']},
-                                        restore: {show: true},
-                                        saveAsImage: {show: true}
-                                    }
-                                },
-                                calculable: true,
-                                xAxis: [
-                                    {
-                                        type: 'category',
-                                        boundaryGap: false,
-                                        data: res.time[i]
-                                    }
-                                ],
-                                yAxis: [
-                                    {
-                                        type: 'value',
-                                        axisLabel: {
-                                            formatter: '{value} p'
+                                plotOptions: {
+                                    spline: {
+                                        marker: {
+                                            radius: 4,
+                                            lineColor: '#666666',
+                                            lineWidth: 1
                                         }
                                     }
-                                ],
-                                series: [
-                                    {
-                                        name: '在线人数',
-                                        type: 'bar',
-                                        data: res.login[i][j],
-                                        //markPoint: {
-                                            //data: [
-                                                //{type: 'max', name: '最大值'},
-                                                //{type: 'min', name: '最小值'}
-                                            //]
-                                        //},
-                                        markLine: {
-                                            data: [
-                                                {type: 'average', name: '平均值'}
-                                            ]
-                                        }
+                                },
+                                series: [{
+                                        name: '上线人数',
+
+                                        data: res.login[i][j]
                                     }, {
-                                        name: '离线人数',
-                                        type: 'bar',
-                                        data: res.offline[i][j],
-                                        //markPoint: {
-                                            //data: [
-                                               // {name: '最低', value: -2, xAxis: 1, yAxis: -1.5}
-                                            //]
-                                        //},
-                                        markLine: {
-                                            data: [
-                                                {type: 'average', name: '平均值'}
-                                            ]
-                                        }
-                                    }
-                                ]
-                            };
-                            myChart.setOption(options);
+                                        name: '下线人数',
+
+                                        data: res.offline[i][j]
+                                    }]
+                            });
                             j++;
                         }
                         i++;
                     }
+                    $('#overall').highcharts({
+                                chart: {
+                                    type: 'spline'
+                                },
+                                title: {
+                                    text: '游戏人数'
+                                },
+                                subtitle: {
+                                    text: '总体人数'
+                                },
+                                xAxis: {
+                                    tickInterval: 10,
+                                    categories: res.filename
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: '人数'
+                                    },
+                                    labels: {
+                                        formatter: function () {
+                                            return this.value + '°';
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    crosshairs: true,
+                                    shared: true
+                                },
+                                plotOptions: {
+                                    spline: {
+                                        marker: {
+                                            radius: 4,
+                                            lineColor: '#666666',
+                                            lineWidth: 1
+                                        }
+                                    }
+                                },
+                                series: [{
+                                        name: '上线人数',
+
+                                        data: res.Alogin
+                                    }, {
+                                        name: '下线人数',
+
+                                        data: res.Aoffline
+                                    }]
+                            });
                 }, 'json');
             })
         </script>
         <script>
             $(function () {
-                $('#myTab li:eq(1) a').tab('show');
+                $('#myTab a:last').tab('show');
             });
         </script>
     </body>
-
 </html>
