@@ -26,11 +26,25 @@ def contactus(request):
 def dailydata(request):
     return render_mako_context(request, '/home_application/dailydata.html')
 
+def insert_sort(lists):
+    # 插入排序
+    count = len(lists)
+    for i in range(1, count):
+        key = lists[i]
+        j = i - 1
+        while j >= 0:
+            if lists[j] > key:
+                lists[j + 1] = lists[j]
+                lists[j] = key
+            j -= 1
+    return lists
+
 def getinfo(request):
     #FilePath = 'C:\\Users\\Administrator\\Documents\\Tencent Files\\707257663\\FileRecv\\stats'
-    FilePath = '/gamedata/gamedata/'
-    #FilePath = '/datatest/'
+    #FilePath = '/gamedata/gamedata/'
+    FilePath = '/datatest/'
     FileName = os.listdir(FilePath)
+    FileName = insert_sort(FileName)
     fullfile = []
     filedate = []
     for txtfile in FileName:
