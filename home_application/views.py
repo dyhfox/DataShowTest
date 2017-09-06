@@ -23,6 +23,8 @@ def contactus(request):
     """
     return render_mako_context(request, '/home_application/contact.html')
 
+def dailydata(request):
+    return render_mako_context(request, '/home_application/dailydata.html')
 
 def getinfo(request):
     #FilePath = 'C:\\Users\\Administrator\\Documents\\Tencent Files\\707257663\\FileRecv\\stats'
@@ -106,5 +108,37 @@ def getinfo(request):
         Alogin.append(float(sum(Anumon[date])/len(Anumon[date])))
         Aoffline.append(float(sum(Anumoff[date])/len(Anumoff[date])))
         date = date + 1
-    print serIp
-    return render_json({'time':time,'ip':serIp, 'id':serID, 'login':numon, 'offline':numoff, 'Alogin':Alogin, 'Aoffline':Aoffline, 'filename':filedate})
+    dod_data = DoD(Alogin,Aoffline)
+    wow_data = WoW(Alogin,Aoffline)
+    print dod_data
+    return render_json({'time':time,'ip':serIp, 'id':serID, 'login':numon, 'offline':numoff, 'Alogin':Alogin, 'Aoffline':Aoffline, 'filename':filedate, 'dod_on':dod_data[0], 'dod_off':dod_data[1], 'wow_on':wow_data[0], 'wow_off':wow_data[1]})
+
+def DoD(online,offline):
+    i = 0
+    dod_data = [[]]
+    for pcount1 in online:
+        if i < len(online)-1:
+            dod_data[0].append(online[i + 1] - pcount1)
+        i = i + 1
+    i = 0
+    dod_data.append([])
+    for pcount2 in offline:
+        if i < len(offline)-1:
+            dod_data[1].append(offline[i + 1] - 2)
+        i = i + 1
+    return dod_data
+
+def WoW(online,offline):
+    i = 0
+    wow_data = [[]]
+    for pcount1 in online:
+        if i < len(online)-7:
+            wow_data[0].append(online[i + 7] - pcount1)
+        i = i + 1
+    i = 0
+    wow_data.append([])
+    for pcount2 in offline:
+        if i < len(offline)-7:
+            wow_data[1].append(offline[i + 1] - pcount2)
+        i = i + 1
+    return wow_data

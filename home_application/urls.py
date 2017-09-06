@@ -7,4 +7,5 @@ urlpatterns = patterns('home_application.views',
     (r'^dev-guide/$', 'dev_guide'),
     (r'^contactus/$', 'contactus'),
     (r'^getinfo/$', 'getinfo'),
+    (r'^dailydata/$', 'dailydata'),
 )
